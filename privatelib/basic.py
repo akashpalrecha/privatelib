@@ -15,6 +15,12 @@ except:
 
 Path.ls = lambda x: list(x.iterdir())
 
-def get_files_by_ext(path:Path, ext):
+def get_files_by_ext(path:Path, ext:str):
+    """
+    gets all the files in a `path` ending in `ext`
+    path: Path to folder containing files
+    ext: extension to filter files by
+    """
+    path = Path(path)
     return filter(lambda x: x.suffix.lower().endswith(ext), 
                   path.iterdir())
