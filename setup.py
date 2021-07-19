@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     
 setuptools.setup(
     name="privatelib",
-    version="0.0.1",
+    version="0.0.2",
     author="akashpalrecha",
     author_email="akashpalrecha@gmail.com",
     description="My personal code library",
