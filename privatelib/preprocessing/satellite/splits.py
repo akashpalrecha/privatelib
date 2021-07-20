@@ -100,7 +100,12 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
     
 def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None, debug=False):
     """
-    incomplete
+    path: path containing images with naming convention of split using split_image_to_grid function
+    out: output file path
+    result: SPLIT.save_to_dir will save merge result to `out`
+            SPLIT.list will return merged image #TODO: change this
+    ext: extension of images to look for. if not provided, function will infer ext from files
+    debug: run set_trace at the start of function
     """
     if debug: set_trace()
     path = Path(path)
