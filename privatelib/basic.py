@@ -3,6 +3,10 @@ from pathlib import Path
 import zipfile
 import os
 import json
+import mimetypes
+from pdb import set_trace
+import gc
+
 try:
     import numpy as np
 except:
@@ -40,3 +44,20 @@ def zipdir(path, zipname):
         for file in files:
             zipf.write(os.path.join(root, file))
     zipf.close()
+    
+
+def is_image(path:Path):
+    res = mimetypes.guess_type(str(path))[0]
+    return res is not None and 'image' in res
+
+def is_valid_file(path:Path. thresh=5):
+    """
+    Checks if file at `path` exists and has minimum size of `thresh`
+    """
+    path = Path(path)
+    if path.exists() and path.lstat().st_size > thresh:
+        return True
+    else return False
+
+def get_file_type(x):
+    return mimetypes.guess_type(str(x))[0]

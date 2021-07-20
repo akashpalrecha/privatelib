@@ -1,5 +1,12 @@
 from privatelib.basic import *
 
+try:
+    import tifffile
+except:
+    print("`tifffile` not available")
+
+SPLIT = Namespace(list=1, save_to_dir=2, generator=3)
+
 def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols=None, results=SPLIT.list, out_dir=None, 
                         pad=False, verbose=True, save_as_rgb=True, bands=[0,1,2]):
     """
@@ -89,3 +96,42 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
     
     if results == SPLIT.list:
         return out_list
+    
+    
+def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None, debug=False):
+    """
+    incomplete
+    """
+    if debug: set_trace()
+    path = Path(path)
+    if ext is None:
+        images = sorted(filter(lambda x: is_image(x), 
+                               path.ls()))
+    else:
+        images = sorted(list(get_files_by_ext(path, ext)))
+    ext = images[0].suffix
+    stems = [tuple(map(int, img.stem.split("_"))) for img in images]
+    rows = set([stem[0] for stem in stems])
+    cols = set([stem[1] for stem in stems])
+    row_ims = []
+    if 'tifffile' in dir() and ext.lower().endswith('tif'):
+        open_func = lambda x: tifffile.imread(str(x))
+        def save_func(fname, arr): tifffile.imsave(fname, arr)
+    else:
+        open_func = lambda x: plt.imread(str(x))
+        def save_func(fname, arr): plt.imsave(fname, arr)
+    output = "".join(str(out).split(".")[:-1]) + ext
+    image_rows = []
+    for row in rows:
+        images = []
+        gc.collect()
+        for col in cols:
+            images.append(open_func(path/f"{row}_{col}{ext}"))
+        image_rows.append(np.concatenate(images, axis=1))
+    image = np.concatenate(image_rows, axis=0)
+    if result == SPLIT.save_to_dir:
+        save_func(output, image)
+    elif result == SPLIT.list:
+        return image
+    else:
+        raise NotImplementedError(f"No implementation for provided result format: {result}")
