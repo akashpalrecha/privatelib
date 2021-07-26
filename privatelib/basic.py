@@ -57,7 +57,7 @@ def is_valid_file(path:Path. thresh=5):
     path = Path(path)
     if path.exists() and path.lstat().st_size > thresh:
         return True
-    else return False
+    else: return False
 
 def get_file_type(x):
     return mimetypes.guess_type(str(x))[0]
