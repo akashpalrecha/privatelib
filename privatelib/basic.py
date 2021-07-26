@@ -50,7 +50,7 @@ def is_image(path:Path):
     res = mimetypes.guess_type(str(path))[0]
     return res is not None and 'image' in res
 
-def is_valid_file(path:Path. thresh=5):
+def is_valid_file(path:Path, thresh=5):
     """
     Checks if file at `path` exists and has minimum size of `thresh`
     """
