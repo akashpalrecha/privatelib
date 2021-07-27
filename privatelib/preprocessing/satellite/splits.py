@@ -1,5 +1,5 @@
 from privatelib.basic import *
-
+from PIL import Image
 try:
     import tifffile
 except:
@@ -8,7 +8,7 @@ except:
 SPLIT = Namespace(list=1, save_to_dir=2, generator=3)
 
 def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols=None, results=SPLIT.list, out_dir=None, 
-                        pad=False, verbose=True, save_as_rgb=True, bands=[0,1,2], prefix=None):
+                        pad=False, verbose=True, save_as_rgb=True, bands=[0,1,2], prefix=None, mask=False):
     """
     splits `im` into a grid according to specifications and returns results according to `results` param
     im: image [numpy array: h x w x c] to split
@@ -82,7 +82,11 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
             elif results == SPLIT.save_to_dir:
                 if save_as_rgb:
                     out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}.png"
-                    plt.imsave(out_f, res[:,:,bands])
+                    if mask:
+                        mask = Image.fromarray(res[:,:,0].astype(np.uint8))
+                        mask.save(str(out_f))
+                    else:
+                        plt.imsave(out_f, res[:,:,bands])
                 else:
                     out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}.tif"
                     tifffile.imsave(out_f, res)
