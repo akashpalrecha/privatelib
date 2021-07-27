@@ -8,7 +8,7 @@ except:
 SPLIT = Namespace(list=1, save_to_dir=2, generator=3)
 
 def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols=None, results=SPLIT.list, out_dir=None, 
-                        pad=False, verbose=True, save_as_rgb=True, bands=[0,1,2]):
+                        pad=False, verbose=True, save_as_rgb=True, bands=[0,1,2], prefix=None):
     """
     splits `im` into a grid according to specifications and returns results according to `results` param
     im: image [numpy array: h x w x c] to split
@@ -25,9 +25,10 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
     verbose: prints status messages if set to True
     save_as_rgb: save 3 band RGB imagery in PNG format
     bands: bands to use when saving as RGB imagery
-    
+    prefix: prefix for saved chunks
     #TODO: generator, better band selection, merge function
     """
+    if prefix is None: prefix = "img"
     if chunk_height is not None:
         if chunk_width is not None: pass
         else: chunk_width = chunk_height
@@ -80,10 +81,10 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
                 cur_list.append(res)
             elif results == SPLIT.save_to_dir:
                 if save_as_rgb:
-                    out_f = out_dir/f"{h_idx // split_h}_{w_idx // split_w}.png"
+                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}.png"
                     plt.imsave(out_f, res[:,:,bands])
                 else:
-                    out_f = out_dir/f"{h_idx // split_h}_{w_idx // split_w}.tif"
+                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}.tif"
                     tifffile.imsave(out_f, res)
                 if verbose: print(f"Saved split to: {out_f}")
             elif results == SPLIT.generator:

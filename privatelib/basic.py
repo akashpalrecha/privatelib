@@ -62,3 +62,9 @@ def is_valid_file(path:Path, thresh=5):
 
 def get_file_type(x):
     return mimetypes.guess_type(str(x))[0]
+
+def describe_array(x:np.ndarray):
+    print("Shape:", x.shape)
+    print(f"(min, max): {x.min(), x.max()}")
+    print(f"(mean, std, var): {x.mean(), x.std(), x.var()}")
+    print(f"Quartiles -- (0, 0.25, 0.5, 0.75, 1.0): {np.quantile(x, [0, 0.25, 0.5, 0.75, 1.0])}")
