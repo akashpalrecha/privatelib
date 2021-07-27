@@ -28,7 +28,10 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
     prefix: prefix for saved chunks
     #TODO: generator, better band selection, merge function
     """
-    if prefix is None: prefix = "img"
+    if len(im.shape) == 2: 
+        im = im[:,:,np.newaxis]
+    if prefix is None: 
+        prefix = "img"
     if chunk_height is not None:
         if chunk_width is not None: pass
         else: chunk_width = chunk_height
