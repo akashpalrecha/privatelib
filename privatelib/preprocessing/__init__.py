@@ -1,1 +1,1 @@
-from satellite.splits import *
+from .satellite.splits import *
