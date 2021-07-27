@@ -20,6 +20,7 @@ except:
 
 
 Path.ls = lambda x: list(x.iterdir())
+Path.str = lambda x: str(x)
 
 def get_files_by_ext(path:Path, ext:str):
     """
