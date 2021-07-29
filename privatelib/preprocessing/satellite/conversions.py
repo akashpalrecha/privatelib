@@ -7,7 +7,7 @@ except:
 try: 
     import rasterio
 except:
-    print("`rasterio` not available"
+    print("`rasterio` not available")
 try:
     import cv2
 except:
