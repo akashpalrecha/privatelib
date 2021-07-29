@@ -126,7 +126,8 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
                                path.ls()))
     else:
         images = sorted(list(get_files_by_ext(path, ext)))
-    prefix = "_".join(images[0].stem.split("_")[:-2])
+    prefix = "_".join(images[0].stem.split("_")[:-3])
+    suffix = images[0].stem.split("_")[-1]
     ext = images[0].suffix
     stems = [tuple(map(int, img.stem.split("_")[-3:-1])) for img in images] # last split after _ is suffix
     rows = set([stem[0] for stem in stems])
@@ -144,7 +145,7 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
         images = []
         gc.collect()
         for col in cols:
-            images.append(open_func(path/f"{prefix}_{row}_{col}{ext}"))
+            images.append(open_func(path/f"{prefix}_{row}_{col}_{suffix}{ext}"))
         image_rows.append(np.concatenate(images, axis=1))
     image = np.concatenate(image_rows, axis=0)
     if result == SPLIT.save_to_dir:
