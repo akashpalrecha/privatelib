@@ -29,4 +29,4 @@ def project_mask_to_tif(mask:Path, tiff:Path, output_file:Path="./output.tif"):
         crs=tile.crs,
         transform=tile.transform,
     ) as dst:
-    dst.write(mask, 1)
+        dst.write(mask, 1)
