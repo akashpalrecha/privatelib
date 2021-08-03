@@ -22,14 +22,14 @@ except:
 Path.ls = lambda x: list(x.iterdir())
 Path.str = lambda x: str(x)
 
-def get_files_by_ext(path:Path, ext:str):
+def get_files_by_ext(path:Path, ext:str, check_if_valid_file:bool=True, size_thresh=5):
     """
     gets all the files in a `path` ending in `ext`
     path: Path to folder containing files
     ext: extension to filter files by
     """
     path = Path(path)
-    return filter(lambda x: x.suffix.lower().endswith(ext), 
+    return filter(lambda x: x.suffix.lower().endswith(ext) and (is_valid_file(x, thresh=size_thresh) if check_if_valid_file else True), 
                   path.iterdir())
     
 
