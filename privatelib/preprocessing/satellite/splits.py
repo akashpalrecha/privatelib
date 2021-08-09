@@ -128,7 +128,7 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
                                path.ls()))
     else:
         images = sorted(list(get_files_by_ext(path, ext)))
-    prefix = "_".join(images[0].stem.split("_")[:-3])
+        
     suffix = images[0].stem.split("_")[-1]
     try:
         int(suffix) # if this is possible, then there is no suffix
@@ -137,6 +137,7 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
         suffix = ""
     except:
         suffix = f"_{suffix}"
+    prefix = "_".join(images[0].stem.split("_")[:-3])
     ext = images[0].suffix
     stems = [tuple(map(int, img.stem.split("_")[-3:-1])) for img in images] # last split after _ is suffix
     rows = set([stem[0] for stem in stems])
