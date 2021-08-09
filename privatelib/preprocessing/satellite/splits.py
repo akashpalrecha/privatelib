@@ -36,6 +36,8 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
         prefix = "img"
     if suffix is None: 
         suffix = ""
+    else:
+        suffix = f"_{suffix}"
     if chunk_height is not None:
         if chunk_width is not None: pass
         else: chunk_width = chunk_height
@@ -88,14 +90,14 @@ def split_image_to_grid(im, chunk_height=None, chunk_width=None, rows=None, cols
                 cur_list.append(res)
             elif results == SPLIT.save_to_dir:
                 if save_as_rgb:
-                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}_{suffix}.png"
+                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}{suffix}.png"
                     if mask:
                         mask = Image.fromarray(res[:,:,0].astype(np.uint8))
                         mask.save(str(out_f))
                     else:
                         plt.imsave(out_f, res[:,:,bands])
                 else:
-                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}_{suffix}.tif"
+                    out_f = out_dir/f"{prefix}_{h_idx // split_h}_{w_idx // split_w}{suffix}.tif"
                     tifffile.imsave(out_f, res)
                 if verbose: print(f"Saved split to: {out_f}")
             elif results == SPLIT.generator:
@@ -128,6 +130,13 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
         images = sorted(list(get_files_by_ext(path, ext)))
     prefix = "_".join(images[0].stem.split("_")[:-3])
     suffix = images[0].stem.split("_")[-1]
+    try:
+        int(suffix) # if this is possible, then there is no suffix
+        # adding trailing `_` to image paths
+        images = [image.parent/f"{image.stem}_{image.suffix}" for image in images]
+        suffix = ""
+    except:
+        suffix = f"_{suffix}"
     ext = images[0].suffix
     stems = [tuple(map(int, img.stem.split("_")[-3:-1])) for img in images] # last split after _ is suffix
     rows = set([stem[0] for stem in stems])
@@ -145,7 +154,7 @@ def merge_images(path:Path, out="output.png", result=SPLIT.save_to_dir, ext=None
         images = []
         gc.collect()
         for col in cols:
-            images.append(open_func(path/f"{prefix}_{row}_{col}_{suffix}{ext}"))
+            images.append(open_func(path/f"{prefix}_{row}_{col}{suffix}{ext}"))
         image_rows.append(np.concatenate(images, axis=1))
     image = np.concatenate(image_rows, axis=0)
     if result == SPLIT.save_to_dir:
